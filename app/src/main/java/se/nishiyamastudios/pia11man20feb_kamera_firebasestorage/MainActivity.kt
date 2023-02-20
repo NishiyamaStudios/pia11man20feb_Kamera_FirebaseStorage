@@ -2,12 +2,30 @@ package se.nishiyamastudios.pia11man20feb_kamera_firebasestorage
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.Button
+import androidx.activity.result.contract.ActivityResultContracts
 
 class MainActivity : AppCompatActivity() {
+
+    val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        // Handle the returned Uri
+
+        Log.i("PIA11DEBUG", "Vi fick resultat!")
+
+        //.let = försök packa upp den, funkar i många sammanhang!
+        uri?.let {
+
+        }
+    }
+
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -17,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.galleryButton).setOnClickListener {
-
+            getContent.launch("image/*")
         }
 
     }
@@ -29,6 +47,13 @@ class MainActivity : AppCompatActivity() {
         } catch (e: ActivityNotFoundException) {
             // display error state to the user
         }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+
+
     }
 
 }
