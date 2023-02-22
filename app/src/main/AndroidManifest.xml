@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,6 +13,17 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Pia11man20feb_Kamera_FirebaseStorage"
         tools:targetApi="31">
+
+        <provider
+            android:authorities="se.nishiyamastudios.pia11man20feb_kamera_firebasestorage"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_file"/>
+        </provider>
+
         <activity
             android:name=".MainActivity"
             android:exported="true">

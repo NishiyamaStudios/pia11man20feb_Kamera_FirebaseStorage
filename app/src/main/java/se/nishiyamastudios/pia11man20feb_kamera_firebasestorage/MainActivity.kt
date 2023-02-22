@@ -3,6 +3,7 @@ package se.nishiyamastudios.pia11man20feb_kamera_firebasestorage
 import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
@@ -21,7 +22,7 @@ class MainActivity : AppCompatActivity() {
     val getContent = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         // Handle the returned Uri
 
-        Log.i("PIA11DEBUG", "Vi fick resultat!")
+        Log.i("PIA11DEBUG", "Vi fick galleri resultat!")
 
         //.let = försök packa upp den, funkar i många sammanhang!
         //behövde API version minimum 28, man kan lägga in en if else för att hantera kod för olika API-versioner.
@@ -54,12 +55,21 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    // ActivityResultContracts innehåller massa funktioner som välj kontakt och liknande..
+    val getContentcamera = registerForActivityResult(ActivityResultContracts.TakePicturePreview()) {
+        it?.let {
+            var theimage = findViewById<ImageView>(R.id.theimage)
+            theimage.setImageBitmap(it)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         findViewById<Button>(R.id.cameraButton).setOnClickListener {
             dispatchTakePictureIntent()
+            //getContentcamera.launch(void)
         }
 
         findViewById<Button>(R.id.galleryButton).setOnClickListener {
@@ -80,6 +90,10 @@ class MainActivity : AppCompatActivity() {
         // _ behövs inte men gör det mer lättläst
         imageRef.getBytes(1_000_000).addOnSuccessListener {
             //När det går bra så får vi tillbaks en ByteArray, alltså datan vi laddat ner
+            var bitmap = BitmapFactory.decodeByteArray(it, 0, it.size)
+
+            var theimage = findViewById<ImageView>(R.id.theimage)
+            theimage.setImageBitmap(bitmap)
 
         }.addOnFailureListener {
             //När det går dåligt så får vi ut exceptionmeddelande genom it
